@@ -14,6 +14,7 @@ import ServiceListView from '@/views/ServiceListView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import { useAuthStore } from '@/stores/authStore'
+import ProfileView from '@/views/ProfileView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -122,15 +123,22 @@ const router = createRouter({
       }
     },
     {
-      path: '/login',
+      path: '/dang-nhap',
       name: 'Login',
       component: LoginView,
-      
     },
     {
-      path: '/register',
-      name: 'register',
+      path: '/dang-ky',
+      name: 'Register',
       component: RegisterView
+    },
+    {
+      path: '/ho-so',
+      name: 'Profile',
+      component: ProfileView,
+      meta : {
+        auth: true
+      }
     },
     {
       path: '/about',

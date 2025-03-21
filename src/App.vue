@@ -3,6 +3,7 @@ import {RouterView, useRoute } from 'vue-router'
 import RouterLinkDropDown from './components/RouterLinkDropDown.vue';
 import { ref } from "vue";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import Button from './components/ui/button/Button.vue';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -122,7 +123,9 @@ const service = {
     <div class="w-full h-full flex flex-col items-center">
       <img src="./assets/background.png" alt="background" class="absolute top-0 right-0 -z-10">
     <header class="flex items-center justify-between px-[200px] w-full" v-if="isLogin">
-    <img src="@/assets/logo.png"/>
+    <RouterLink to="/">
+      <img src="@/assets/logo.png"/>
+    </RouterLink>
     <div class="flex justify-center items-center gap-1 text-[#0a0a0a]">
       <RouterLinkDropDown :component="domain"></RouterLinkDropDown>
       <RouterLinkDropDown :component="web"></RouterLinkDropDown>
@@ -132,20 +135,20 @@ const service = {
       <DropdownMenu>
     <DropdownMenuTrigger as-child>
       <Avatar>
-    <AvatarImage src="https://github.com/unovue.png" alt="@unovue" />
-    <AvatarFallback>CN</AvatarFallback>
-  </Avatar>
+        <img src="./assets/profile.png" alt="" class="w-10 h-10 rounded cursor-pointer">
+      </Avatar>
     </DropdownMenuTrigger>
     <DropdownMenuContent>
       <DropdownMenuGroup>
         <DropdownMenuItem>
-          <RouterLink to="/login">
-            Logout
+          <RouterLink to="/dang-nhap">
+            Đăng xuất
           </RouterLink>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <span>Billing</span>
-          <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+          <RouterLink to="/ho-so">
+            Hồ sơ
+          </RouterLink>
         </DropdownMenuItem>
       </DropdownMenuGroup>
     </DropdownMenuContent>
