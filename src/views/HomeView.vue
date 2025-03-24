@@ -21,7 +21,7 @@ type serviceSlide = {
   emailPerHour : Number,
   emailPerDay : Number
 }
-import { onOpen } from '@/composables/useServiceModal'
+import { onOpen } from '@/composables/useModal'
 import Modal from '@/components/Modal.vue'
 const bannerSlides : BannerSlide[] = [
   {

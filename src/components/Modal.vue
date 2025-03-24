@@ -5,7 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { isOpen,onClose } from '@/composables/useServiceModal';
+import { isOpen,onClose } from '@/composables/useModal';
 type Props = {
     title? : string
 

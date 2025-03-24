@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import Button from '@/components/ui/button/Button.vue'
+import { onOpen } from '@/composables/useModal'
+import Modal from '@/components/Modal.vue'
+import ServiceModal from '@/components/EmailModal.vue'
 type serviceSlide = {
   name : String,
   price : Number,
@@ -112,6 +115,9 @@ const labelNames : Record<string,string> = {
 }
 </script>
 <template>
+  <Modal title="Đăng ký Dịch vụ">
+      <ServiceModal/>
+    </Modal>
     <h1 class="text-3xl font-bold mt-6">EMAIL HOSTING</h1>
     <Carousel class="relative w-full max-w-[1000px] m-auto" 
     :opts="{
@@ -136,7 +142,7 @@ const labelNames : Record<string,string> = {
                   {{ item }}
                 </p>
               </div>
-              <Button :variant="index % 3 == 1 ? 'secondary' : 'default'" class="w-fit px-8 mx-auto my-5">Đăng kí</Button>
+              <Button :variant="index % 3 == 1 ? 'secondary' : 'default'" class="w-fit px-8 mx-auto my-5" @click="onOpen()">Đăng kí</Button>
             </div>
       </CarouselItem>
     </CarouselContent>
