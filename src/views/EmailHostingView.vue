@@ -3,7 +3,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import Button from '@/components/ui/button/Button.vue'
 import { onOpen } from '@/composables/useModal'
 import Modal from '@/components/Modal.vue'
-import ServiceModal from '@/components/EmailModal.vue'
+import ServiceModal from '@/components/ServiceModal.vue'
 type serviceSlide = {
   name : String,
   price : Number,
