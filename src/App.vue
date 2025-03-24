@@ -140,16 +140,16 @@ const service = {
     </DropdownMenuTrigger>
     <DropdownMenuContent>
       <DropdownMenuGroup>
+        <RouterLink to="/dang-nhap" class="cursor-pointer">
         <DropdownMenuItem>
-          <RouterLink to="/dang-nhap">
-            Đăng xuất
-          </RouterLink>
+          Đăng xuất
         </DropdownMenuItem>
+      </RouterLink>
+      <RouterLink to="/ho-so" class="cursor-pointer">
         <DropdownMenuItem>
-          <RouterLink to="/ho-so">
             Hồ sơ
-          </RouterLink>
         </DropdownMenuItem>
+      </RouterLink>
       </DropdownMenuGroup>
     </DropdownMenuContent>
   </DropdownMenu>

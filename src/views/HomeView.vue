@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import Autoplay from 'embla-carousel-autoplay'
 import Button from '@/components/ui/button/Button.vue'
+import ServiceModal from '@/components/ServiceModal.vue'
 type BannerSlide = {
   title : string,
   image: string,
@@ -20,6 +21,8 @@ type serviceSlide = {
   emailPerHour : Number,
   emailPerDay : Number
 }
+import { onOpen } from '@/composables/useServiceModal'
+import Modal from '@/components/Modal.vue'
 const bannerSlides : BannerSlide[] = [
   {
     title: "Hosting chất lượng cao",
@@ -138,6 +141,9 @@ const labelNames : Record<string,string> = {
 
 <template>
   <main>
+    <Modal title="Đăng ký Dịch vụ">
+      <ServiceModal/>
+    </Modal>
     <Carousel class="relative w-full" 
     :opts="{
       align: 'start',
@@ -185,7 +191,7 @@ const labelNames : Record<string,string> = {
                   {{ item }}
                 </p>
               </div>
-              <Button :variant="index % 3 == 1 ? 'secondary' : 'default'" class="w-fit px-8 mx-auto my-5">Đăng kí</Button>
+              <Button :variant="index % 3 == 1 ? 'secondary' : 'default'" class="w-fit px-8 mx-auto my-5" @click="onOpen()">Đăng kí</Button>
             </div>
       </CarouselItem>
     </CarouselContent>

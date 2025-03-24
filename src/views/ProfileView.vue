@@ -1,5 +1,5 @@
 <template>
-    <div class="flex my-auto items-center justify-center ">
+    <div class="flex mt-[200px] items-center justify-center ">
       <div class="w-full max-w-md p-6 rounded-2xl shadow-md">
         <h2 class="text-2xl font-semibold text-center text-primary-black">Hồ sơ</h2>
         <form @submit.prevent="handleSubmit" class="mt-4">
