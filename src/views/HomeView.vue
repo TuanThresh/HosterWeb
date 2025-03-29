@@ -1,28 +1,19 @@
 <script setup lang="ts">
-import { Card, CardContent } from '@/components/ui/card'
+import {onMounted, ref} from "vue";
+import axios from "../plugins/axios.ts";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 import Autoplay from 'embla-carousel-autoplay'
 import Button from '@/components/ui/button/Button.vue'
-import ServiceModal from '@/components/ServiceModal.vue'
+import ServiceModal from "../components/ServiceModal.vue"
+import { onOpen } from '@/composables/useModal'
+import Modal from '@/components/Modal.vue'
+import {type HostingProduct} from "@/types/index.ts";
+import { handleError, handleSucess } from "@/lib/utils.ts";
 type BannerSlide = {
   title : string,
   image: string,
   description : string
 }
-type serviceSlide = {
-  name : String,
-  price : Number,
-  capacity : Number,
-  emailAddress : Number,
-  emailFowarder : Number,
-  mailingList : Number,
-  antiVirus : boolean,
-  antiSpam : boolean,
-  emailPerHour : Number,
-  emailPerDay : Number
-}
-import { onOpen } from '@/composables/useModal'
-import Modal from '@/components/Modal.vue'
 const bannerSlides : BannerSlide[] = [
   {
     title: "Hosting chất lượng cao",
@@ -40,109 +31,31 @@ const bannerSlides : BannerSlide[] = [
     description: "Quý khách hàng tin tưởng khi sử dụng dịch vụ Hoster"
   },
 ]
-const serviceSlides : serviceSlide[] = [
-  {
-    name: "Email Hosting Đồng",
-    price: 100000,
-    capacity : 20,
-    emailAddress : 10,
-    emailFowarder : 10,
-    mailingList : 0,
-    antiVirus : true,
-    antiSpam : true,
-    emailPerHour : 100,
-    emailPerDay : 2400
-  },
-  {
-    name: "Email Hosting Đồng++",
-    price: 200000,
-    capacity : 40,
-    emailAddress : 20,
-    emailFowarder : 20,
-    mailingList : 2,
-    antiVirus : true,
-    antiSpam : true,
-    emailPerHour : 100,
-    emailPerDay : 2400
-  },
-  {
-    name: "Email Hosting Bạc",
-    price: 500000,
-    capacity : 50,
-    emailAddress : 50,
-    emailFowarder : 50,
-    mailingList : 5,
-    antiVirus : true,
-    antiSpam : true,
-    emailPerHour : 100,
-    emailPerDay : 2400
-  },
-  {
-    name: "Email Hosting Bạc++",
-    price: 700000,
-    capacity : 200,
-    emailAddress : 100,
-    emailFowarder : 100,
-    mailingList : 10,
-    antiVirus : true,
-    antiSpam : true,
-    emailPerHour : 100,
-    emailPerDay : 2400
-  },
-  {
-    name: "Email Hosting Vàng",
-    price: 400000,
-    capacity : 200,
-    emailAddress : 200,
-    emailFowarder : 200,
-    mailingList : 20,
-    antiVirus : true,
-    antiSpam : true,
-    emailPerHour : 100,
-    emailPerDay : 2400
-  },
-  {
-    name: "Email Hosting Vàng++",
-    price: 600000,
-    capacity : 300,
-    emailAddress : 300,
-    emailFowarder : 300,
-    mailingList : 30,
-    antiVirus : true,
-    antiSpam : true,
-    emailPerHour : 100,
-    emailPerDay : 2400
-  },
-  // {
-  //   name: "Email Hosting Bạch kim",
-  //   price: 2000000,
-  //   capacity : 500,
-  //   emailAddress : 500,
-  //   emailFowarder : 500,
-  //   mailingList : 50,
-  //   antiVirus : true,
-  //   antiSpam : true,
-  //   emailPerHour : 100,
-  //   emailPerDay : 2400
-  // }
-  
-]
-const labelNames : Record<string,string> = {
-  capacity: "Dung lượng",
-  emailAddress: "Địa chỉ Email",
-  emailFowarder: "Email Fowarder",
-  mailingList: "Mailing List",
-  antiVirus: "Anti Virus",
-  antiSpam: "Anti Spam",
-  emailPerHour: "Email/giờ",
-  emailPerDay: "Email/ngày"
-}
-</script>
+const selectedService  = ref({} as HostingProduct);
 
+const hostingProducts = ref([] as HostingProduct[]);
+
+
+
+const fetchHostings = async () => {
+  try {
+    const { data } = await axios.get("hostings");
+    hostingProducts.value = data;
+  } catch (error) {
+    handleError(error);
+  }
+}
+onMounted(async () => {
+  await fetchHostings();
+})
+</script>
 <template>
   <main>
     <Modal title="Đăng ký Dịch vụ">
-      <ServiceModal/>
+      <ServiceModal :product="{
+        ...selectedService,
+        service_type : 'hosting',
+      }" />
     </Modal>
     <Carousel class="relative w-full" 
     :opts="{
@@ -178,20 +91,27 @@ const labelNames : Record<string,string> = {
 
     >
     <CarouselContent class="-ml-4">
-      <CarouselItem v-for="(slide,index) in serviceSlides " class="basis-1/3 text-center">
+      <CarouselItem v-for="(slide,index) in hostingProducts " class="basis-1/3 text-center">
             <div class="px-6 flex flex-col gap-3  !border-white" :class="index % 3 == 1 ? '!bg-primary-yellow' : '!bg-transparent text-primary-black'">
               <img src="https://hoster.vn/wp-content/uploads/2025/01/lever2.png" alt="">
-              <h3 class="text-2xl font-bold  ">{{slide.name}}</h3>
+              <h3 class="text-2xl font-bold  ">{{slide.plan}}</h3>
               <h1 class="text-3xl" :class="index % 3 == 1 ? 'text-white' : ' text-primary-yellow'">{{ slide.price }}</h1>
-              <div class="flex justify-between items-center text-xl" v-for="(item,index) in slide">
-                <p v-if="index !== 'name' && index !=='price'">
-                  {{ labelNames[index] }}
-                </p>
-                <p v-if="index !== 'name' && index !=='price'">
-                  {{ item }}
-                </p>
+              <div class="grid grid-cols-2 text-xl">
+                <p>Băng thông</p>
+                <p>{{ slide.bandwidth }}</p>
+                <p>Dung lượng</p>
+                <p>{{ slide.disk_space }}</p>
+                <p>Tài khoản</p>
+                <p>{{ slide.accounts_ftp }}</p>
+                <p>Miền thêm</p>
+                <p>{{ slide.addon_domains }}</p>
+                <p>Miền phụ</p>
+                <p>{{ slide.sub_domains }}</p>
               </div>
-              <Button :variant="index % 3 == 1 ? 'secondary' : 'default'" class="w-fit px-8 mx-auto my-5" @click="onOpen()">Đăng kí</Button>
+              <Button :variant="index % 3 == 1 ? 'secondary' : 'default'" class="w-fit px-8 mx-auto my-5" @click="() => {
+                selectedService = slide;
+                onOpen()
+              }">Đăng kí</Button>
             </div>
       </CarouselItem>
     </CarouselContent>

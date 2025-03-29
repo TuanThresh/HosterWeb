@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import {RouterView, useRoute } from 'vue-router'
 import RouterLinkDropDown from './components/RouterLinkDropDown.vue';
-import { ref } from "vue";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import Button from './components/ui/button/Button.vue';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,12 +11,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAuthStore } from './stores/authStore';
-
+import { Notivue, Notification } from 'notivue'
 const isLogin = useAuthStore().isLogin;
 
 const domain = {
   title: "Tên Miền",
-  href: "/",
+  href: "/ten-mien",
   children: [
     {
       title: "Bảng giá Tên Miền",
@@ -38,70 +36,24 @@ const domain = {
     }
   ]
 }
-const web = {
-  title: "Web hosting",
-  href: "/",
+const hosting= {
+  title: "Hosting",
+  href: "/hosting",
   children: [
     {
-      title: "Linux SSD Hosting",
-      href: "/linux-ssd-hosting",
+      title: "Gói hosting",
+      href: "/hosting",
     },
-    {
-      title: "Linux HDD Hosting",
-      href: "/linux-hdd-hosting",
-    },
-    {
-      title: "Windows SSD Hosting",
-      href: "/windows-ssd-hosting",
-    },
-    {
-      title: "Định, Chi Phí Tiết Kiệm | Hoster.vn",
-      href: "/",
-    },
-    {
-      title: "Windows HDD Hosting – Lưu Trữ Ổn",
-      href: "/",
-    },
-    {
-      title: "Reseller Hosting Windows",
-      href: "/",
-    },
-    {
-      title: "Reseller Hosting Linux",
-      href: "/",
-    }
+
   ]
 }
-const email = {
-  title: "Email hosting",
-  href: "/",
+const vps = {
+  title: "VPS",
+  href: "/vps",
   children: [
     {
-      title: "Email Hosting",
-      href: "/email-hosting",
-    },
-    {
-      title: "Email Server",
-      href: "/email-server",
-    },
-    
-  ]
-}
-const server = {
-  title: "Máy Chủ",
-  href: "/",
-  children: [
-    {
-      title: "Máy Chủ Ảo – VPS",
-      href: "/may-chu-ao",
-    },
-    {
-      title: "Máy Chủ Riêng",
-      href: "/may-chu-rieng",
-    },
-    {
-      title: "Máy Chủ Cơ Sở Dữ Liệu",
-      href: "/may-chu-co-so-du-lieu",
+      title: "Bảng giá vps",
+      href: "/vps",
     },
     
   ]
@@ -120,6 +72,9 @@ const service = {
 </script>
 
 <template>
+  <Notivue v-slot="item" position="top-right">
+    <Notification :item="item" />
+  </Notivue>
     <div class="w-full h-full flex flex-col items-center">
       <img src="./assets/background.png" alt="background" class="absolute top-0 right-0 -z-10">
     <header class="flex items-center justify-between px-[200px] w-full" v-if="isLogin">
@@ -128,9 +83,8 @@ const service = {
     </RouterLink>
     <div class="flex justify-center items-center gap-1 text-[#0a0a0a]">
       <RouterLinkDropDown :component="domain"></RouterLinkDropDown>
-      <RouterLinkDropDown :component="web"></RouterLinkDropDown>
-      <RouterLinkDropDown :component="email"></RouterLinkDropDown>
-      <RouterLinkDropDown :component="server"></RouterLinkDropDown>
+      <RouterLinkDropDown :component="hosting"></RouterLinkDropDown>
+      <RouterLinkDropDown :component="vps"></RouterLinkDropDown>
       <RouterLinkDropDown :component="service"></RouterLinkDropDown>
       <DropdownMenu>
     <DropdownMenuTrigger as-child>

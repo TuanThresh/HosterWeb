@@ -1,16 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import DomainNameView from '@/views/DomainNameView.vue'
-import DomainPriceView from '@/views/DomainPriceView.vue'
-import LinuxSsdHostingView from '@/views/LinuxSsdHostingView.vue'
-import LinuxHddHostingView from '@/views/LinuxHddHostingView.vue'
-import WindowsSsdHostingView from '@/views/WindowsSsdHostingView.vue'
-import EmailHostingView from '@/views/EmailHostingView.vue'
-import EmailServerView from '@/views/EmailServerView.vue'
-import ServerVpsView from '@/views/ServerVpsView.vue'
-import ServerView from '@/views/ServerView.vue'
-import ServerDatabaseView from '@/views/ServerDatabaseView.vue'
-import ServiceListView from '@/views/ServiceListView.vue'
+import HostingNameView from '@/views/HostingNameView.vue'
+import VPSNameView from '@/views/VPSNameView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
 import { useAuthStore } from '@/stores/authStore'
@@ -35,89 +27,17 @@ const router = createRouter({
       }
     },
     {
-      path: '/kiem-tra-ten-mien',
-      name: 'DomainPrice',
-      component: DomainPriceView,
+      path: '/hosting',
+      name: 'HostingName',
+      component: HostingNameView,
       meta : {
         auth: true
       }
     },
     {
-      path: '/linux-ssd-hosting',
-      name: 'LinuxSsdHosting',
-      component: LinuxSsdHostingView,
-      meta : {
-        auth: true
-      }
-    },
-    {
-      path: '/linux-hdd-hosting',
-      name: 'LinuxHddHosting',
-      component: LinuxHddHostingView,
-      meta : {
-        auth: true
-      }
-    },
-    {
-      path: '/windows-ssd-hosting',
-      name: 'WindowsSsdHosting',
-      component: WindowsSsdHostingView,
-      meta : {
-        auth: true
-      }
-    },
-    {
-      path: '/email-hosting',
-      name: 'EmailHosting',
-      component: EmailHostingView,
-      meta : {
-        auth: true
-      }
-    },
-    {
-      path: '/email-server',
-      name: 'EmailServer',
-      component: EmailServerView,
-      meta : {
-        auth: true
-      }
-    },
-    {
-      path: '/kiem-tra-ten-mien',
-      name: 'DomainPrice',
-      component: DomainPriceView,
-      meta : {
-        auth: true
-      }
-    },
-    {
-      path: '/may-chu-ao',
-      name: 'ServerVps',
-      component: ServerVpsView,
-      meta : {
-        auth: true
-      }
-    },
-    {
-      path: '/may-chu-rieng',
-      name: 'ServerView',
-      component: ServerView,
-      meta : {
-        auth: true
-      }
-    },
-    {
-      path: '/may-chu-co-so-du-lieu',
-      name: 'ServerDatabaseView',
-      component: ServerDatabaseView,
-      meta : {
-        auth: true
-      }
-    },
-    {
-      path: '/danh-sach-dich-vu',
-      name: 'ServiceList',
-      component: ServiceListView,
+      path: '/vps',
+      name: 'VpsName',
+      component: VPSNameView,
       meta : {
         auth: true
       }

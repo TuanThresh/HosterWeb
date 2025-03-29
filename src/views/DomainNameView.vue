@@ -1,4 +1,31 @@
+<script lang="ts" setup>
+import {onMounted, ref} from "vue";
+import axios from "../plugins/axios.ts";
+import {type DomainProduct} from "@/types/index.ts";
+import ServiceModal from "../components/ServiceModal.vue"
+import { onOpen } from '@/composables/useModal'
+import Modal from '@/components/Modal.vue'
+import { handleError } from "@/lib/utils.ts";
+const domainProducts = ref([] as DomainProduct[]);
+const selectedService  = ref({} as DomainProduct);
+onMounted(async () => {
+    try{
+        const { data } = await axios.get("domain_products");
+        domainProducts.value = data;
+        console.log(data);
+    }
+    catch(error) {
+        handleError(error);
+    }
+})
+</script>
 <template>
+    <Modal title="Đăng ký Dịch vụ">
+      <ServiceModal :product="{
+        ...selectedService,
+        service_type : 'domain'
+      }" />
+    </Modal>
         <!-- Header Section -->
         <h1 class="text-3xl font-bold mt-6">BẢNG GIÁ TÊN MIỀN</h1>
         <main>
@@ -14,167 +41,28 @@
         </div>
 
         <!-- Table Section -->
-        <h2 class="text-xl font-bold mt-6">TÊN MIỀN VIỆT NAM</h2>
         <div class="overflow-x-auto mt-4">
             <table class="w-full border-collapse border border-gray-300">
                 <thead>
                     <tr class="bg-primary-yellow text-white">
-                        <th class="border border-gray-300 px-4 py-2 text-left">TÊN MIỀN</th>
-                        <th class="border border-gray-300 px-4 py-2">PHÍ KHỞI TẠO</th>
-                        <th class="border border-gray-300 px-4 py-2">PHÍ DUY TRÌ/NĂM</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left">MÃ TÊN MIỀN</th>
+                        <th class="border border-gray-300 px-4 py-2">TÊN MIỀN</th>
+                        <th class="border border-gray-300 px-4 py-2">GIÁ</th>
                         <th class="border border-gray-300 px-4 py-2"> </th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-700">
-                    <tr>
-                        <td class="border border-gray-300 px-4 py-2">.vn</td>
-                        <td class="border border-gray-300 px-4 py-2">210.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2">460.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 px-4 py-2">.com.vn | .net.vn | .biz.vn</td>
-                        <td class="border border-gray-300 px-4 py-2">210.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2">360.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 px-4 py-2">.org.vn | .gov.vn | .edu.vn | .pro.vn</td>
-                        <td class="border border-gray-300 px-4 py-2">230.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2">260.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 px-4 py-2">.name.vn</td>
-                        <td class="border border-gray-300 px-4 py-2">30.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2">45.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 px-4 py-2">.vn (1 ký tự)</td>
-                        <td class="border border-gray-300 px-4 py-2">350.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2">42.000.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 px-4 py-2">.vn (2 ký tự)</td>
-                        <td class="border border-gray-300 px-4 py-2">350.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2">11.000.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-                    </tr>
-                    <tr>
-                        <td class="border border-gray-300 px-4 py-2">Tên miền tiếng Việt</td>
-                        <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                        <td class="border border-gray-300 px-4 py-2">40.000 VNĐ</td>
-                        <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
+                    <tr v-for="domain in domainProducts" :key="domain.id">
+                        <td class="border border-gray-300 px-4 py-2">{{ domain.id }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ domain.domain_name }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ domain.price }}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer" @click="() => {
+                            onOpen();
+                            selectedService = domain;
+                        }">Đăng ký</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <h2 class="text-xl font-bold mt-6">TÊN MIỀN QUỐC TẾ</h2>
-<div class="overflow-x-auto mt-4">
-    <table class="w-full border-collapse border border-gray-300">
-        <thead>
-            <tr class="bg-primary-yellow text-white">
-                <th class="border border-gray-300 px-4 py-2 text-left">TÊN MIỀN</th>
-                <th class="border border-gray-300 px-4 py-2">PHÍ KHỞI TẠO</th>
-                <th class="border border-gray-300 px-4 py-2">PHÍ DUY TRÌ/NĂM</th>
-                <th class="border border-gray-300 px-4 py-2"> </th>
-            </tr>
-        </thead>
-        <tbody class="text-gray-700">
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.com</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">300.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.net</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">320.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.org | .info</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">378.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.top | .xyz</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">260.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.site</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">580.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.website</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">450.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.click</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">220.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.work</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">170.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.space</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">200.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.us</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">260.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.co.uk | .eu</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">270.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.art</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">280.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.biz | .rocks | .juegos</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">280.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.audio</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">290.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-            <tr>
-                <td class="border border-gray-300 px-4 py-2">.name | .pw</td>
-                <td class="border border-gray-300 px-4 py-2">Miễn phí</td>
-                <td class="border border-gray-300 px-4 py-2">320.000 VNĐ</td>
-                <td class="border border-gray-300 px-4 py-2 text-primary-yellow cursor-pointer">Đăng ký</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
         </main>
 </template>
